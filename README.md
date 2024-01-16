@@ -219,6 +219,5 @@ A: Make sure symlinked ksu folder are there.
 #### Q: I get undefined reference at ksu related lines.
 A: Check out/drivers/kernelsu, if everything not compiled then, check drivers/Makefile, make sure ```obj-$(CONFIG_KSU) += kernelsu/``` are there.
 ## D. Credit
-- [Physwizz](https://github.com/physwizz) - OEM and Permissive kernel source
 - [Rissu](https://github.com/rsuntk) - Rebased kernel source
 - [KernelSU](https://kernelsu.org) - A kernel-based root solution for Android

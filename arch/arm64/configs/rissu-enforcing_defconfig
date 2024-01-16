@@ -96,6 +96,18 @@ CONFIG_OVERLAY_FS=y
 # CONFIG_HAVE_KPROBES is not set
 
 #
+# SELinux Option
+# 
+# * As the name suggest, Enforcing or Permissive,
+# * Choose one of these config.
+#
+# * Why permissive is required?
+# * Some GSI or ROM need permissive kernel to booting into the system.
+#
+CONFIG_SECURITY_SELINUX_ALWAYS_ENFORCE=y
+# CONFIG_SECURITY_SELINUX_ALWAYS_PERMISSIVE is not set
+
+#
 # IRQ subsystem
 #
 CONFIG_GENERIC_IRQ_PROBE=y

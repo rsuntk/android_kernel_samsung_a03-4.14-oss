@@ -25,8 +25,13 @@ CONFIG_LOCALVERSION="-YourKernelSringsName"
 # CONFIG_LOCALVERSION_AUTO is not set
 ```
 #### 6. Get this [build script](https://github.com/rsuntk/kernel-build-script) or type
+- If you want set the SELinux to Permissive, use:
 ```sh
-make -C $(pwd) O=$(pwd)/out KCFLAGS=-w CONFIG_SECTION_MISMATCH_WARN_ONLY=y rissu_defconfig && make -C $(pwd) O=$(pwd)/out KCFLAGS=-w CONFIG_SECTION_MISMATCH_WARN_ONLY=y
+make -C $(pwd) O=$(pwd)/out KCFLAGS=-w CONFIG_SECTION_MISMATCH_WARN_ONLY=y rissu-permissive_defconfig && make -C $(pwd) O=$(pwd)/out KCFLAGS=-w CONFIG_SECTION_MISMATCH_WARN_ONLY=y
+```
+- And for Enforcing, use:
+```sh
+make -C $(pwd) O=$(pwd)/out KCFLAGS=-w CONFIG_SECTION_MISMATCH_WARN_ONLY=y rissu-enforcing_defconfig && make -C $(pwd) O=$(pwd)/out KCFLAGS=-w CONFIG_SECTION_MISMATCH_WARN_ONLY=y
 ```
 #### 7. Check directory out/arch/arm64/boot
 ```sh
@@ -41,27 +46,20 @@ Image    - Kernel is uncompressed, but you can put this to AnyKernel3 flasher
 ```sh
 curl -LSs "https://raw.githubusercontent.com/tiann/KernelSU/main/kernel/setup.sh" | bash -
 ```
-#### 2. Disable KPROBE. Edit ```arch/arm64/configs/rissu_defconfig```, and the edit these lines
+#### 2. Disable KPROBE. Edit ```arch/arm64/configs/rissu-${SELINUX_OPTIONS}_defconfig```, and follow these
 > KPROBE sometimes broken in a few device, so we need to disable it and use manual integration.
 
-**From this:**
+```diff
+-CONFIG_KPROBES=y
+-CONFIG_HAVE_KPROBES=y
+-CONFIG_KPROBE_EVENTS=y
++# CONFIG_KPROBES is not set
++# CONFIG_HAVE_KPROBES is not set
++# CONFIG_KPROBE_EVENTS is not set
++CONFIG_KSU=y
++# CONFIG_KSU_DEBUG is not set # if you a dev, then turn on this option for KernelSU debugging.
 ```
-CONFIG_KPROBES=y
-CONFIG_HAVE_KPROBES=y
-CONFIG_KPROBE_EVENTS=y
-```
-**To this:**
-```
-# CONFIG_KPROBES is not set
-# CONFIG_HAVE_KPROBES is not set
-# CONFIG_KPROBE_EVENTS is not set
-```
-#### 3. Then add KernelSU config line
-```
-CONFIG_KSU=y
-# CONFIG_KSU_DEBUG is not set # if you a dev, then turn on this option for KernelSU debugging.
-```
-#### 4. Edit these file:
+#### 3. Edit these file:
 - **NOTE: KernelSU depends on these symbols:***
 	- ```do_execveat_common```
 	- ```faccessat```
@@ -208,6 +206,8 @@ index 45306f9ef247..815091ebfca4 100755
  		add_input_randomness(type, code, value);
 ```
 - **See full KernelSU non-GKI integration documentations** [here](https://kernelsu.org/guide/how-to-integrate-for-non-gki.html)
+
+#### 4. Build it again.
 
 ## C. Problem solving
 #### Q: I get an error in drivers/gpu/arm/Kconfig
